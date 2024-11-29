@@ -25,6 +25,36 @@ class PostJobView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class UpdateJobView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, job_id):
+        try:
+            job = Job.objects.get(id=job_id, employer__user=request.user)
+        except Job.DoesNotExist:
+            return Response(
+                {"error": "Job not found or you do not have permission to update this job."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = JobSerializer(job, data=request.data, partial=True)  # `partial=True` allows partial updates
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, job_id):
+        try:
+            job = Job.objects.get(id=job_id, employer__user=request.user)
+            job.delete()
+            return Response({"message": "Job deleted successfully."}, status=status.HTTP_200_OK)
+        except Job.DoesNotExist:
+            return Response(
+                {"error": "Job not found or you do not have permission to delete this job."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+
 class JobListView(generics.ListAPIView):
     serializer_class = JobSerializer
     permission_classes = [IsAuthenticated]
@@ -162,3 +192,25 @@ class AdminJobApplicationsView(generics.ListAPIView):
         # Return all job applications for the admin view
         return JobApplication.objects.all()
 
+class ApplicantsForJobView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, job_id):
+        """
+        Fetch all applicants for a specific job by job_id.
+        """
+        try:
+            # Filter job applications for the given job_id
+            applications = JobApplication.objects.filter(job__id=job_id)
+            serializer = JobApplicationSerializer(applications, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except JobApplication.DoesNotExist:
+            return Response(
+                {"error": "No applicants found for this job."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

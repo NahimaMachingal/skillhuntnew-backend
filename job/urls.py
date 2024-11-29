@@ -19,5 +19,7 @@ urlpatterns = [
     path('applied-candidates/', AppliedCandidatesView.as_view(), name='applied-candidates'),
     path('application/<int:application_id>/', UpdateApplicationStatusView.as_view(), name='update-application-status'),
     path('admin/applications/', AdminJobApplicationsView.as_view(), name='admin-applications'),
+    path('updatejob/<int:job_id>/', UpdateJobView.as_view(), name='update-job'),
+    path('job/<int:job_id>/applicants/', ApplicantsForJobView.as_view(), name='applicants-for-job'),
 
 ]

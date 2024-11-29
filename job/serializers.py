@@ -17,12 +17,14 @@ class JobApplicationSerializer(serializers.ModelSerializer):
     employer_username = serializers.CharField(source='job.employer.user.username', read_only=True)  # New field
     applicant_email = serializers.EmailField(source='applicant.email', read_only=True)
     applicant_name = serializers.CharField(source='applicant.username', read_only=True)
+    job_id = serializers.IntegerField(source='job.id', read_only=True)
     
     class Meta:
         model = JobApplication
         fields = [
             'id',
             'job',
+            'job_id',
             'job_title',
             'employer_company_name',
             'employer_username',

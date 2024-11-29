@@ -166,7 +166,7 @@ class LoginView(APIView):
 
         
         refresh = RefreshToken.for_user(user)
-        refresh['first_name'] = str(user.first_name)
+        refresh['first_name'] = user.first_name
         content = {
             'email' : user.email,
             'refresh': str(refresh),

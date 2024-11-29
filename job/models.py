@@ -77,4 +77,5 @@ class JobApplication(models.Model):
 
 
     def __str__(self):
-        return f"{self.applicant.email} applied for {self.job.title}"
+        job_title = self.job.title if self.job else 'No job assigned'
+        return f"{self.applicant.email} applied for {job_title}"
