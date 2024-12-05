@@ -24,6 +24,7 @@ urlpatterns = [
     path('api/',include("api.urls")),
     path('jobseeker/',include("jobseeker.urls")),
     path('api/job/',include("job.urls")),
+    path('api/chat/',include("chat.urls")),
     
 
     

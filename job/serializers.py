@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import Job, JobApplication
 
 class JobSerializer(serializers.ModelSerializer):
+    employer_user_id = serializers.IntegerField(source='employer.user.id', read_only=True)  # Add this line
     employer_username = serializers.CharField(source='employer.user.username', read_only=True)
     employer_company_name = serializers.CharField(source='employer.company_name', read_only=True)
     class Meta:
@@ -12,6 +13,7 @@ class JobSerializer(serializers.ModelSerializer):
 
 class JobApplicationSerializer(serializers.ModelSerializer):
     # Nested serialization for the job and applicant details
+    employer_id = serializers.IntegerField(source='employer.id', read_only=True)  # Add this line
     job_title = serializers.CharField(source='job.title', read_only=True)
     employer_company_name = serializers.CharField(source='job.employer.company_name', read_only=True)
     employer_username = serializers.CharField(source='job.employer.user.username', read_only=True)  # New field
@@ -21,20 +23,5 @@ class JobApplicationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = JobApplication
-        fields = [
-            'id',
-            'job',
-            'job_id',
-            'job_title',
-            'employer_company_name',
-            'employer_username',
-            'applicant',
-            'applicant_email',
-            'applicant_name',
-            'resume',
-            'cover_letter',
-            'applied_at',
-            'status',
-            'questions',
-        ]
+        fields = '__all__'
         read_only_fields = ['applied_at']

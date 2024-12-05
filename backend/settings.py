@@ -32,10 +32,19 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-
+# Configure in-memory channel layer
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        
+    },
+}
 # Application definition
 
 INSTALLED_APPS = [
+
+
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,13 +53,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
 
+    'channels',
     ##
     'api',
     'job',
-
+    'chat',
     
-
-
 
 
 
@@ -156,6 +164,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
+ASGI_APPLICATION = 'backend.asgi.application'
 
 
 # Database
