@@ -46,7 +46,8 @@ class UpdateJobView(APIView):
     def delete(self, request, job_id):
         try:
             job = Job.objects.get(id=job_id, employer__user=request.user)
-            job.delete()
+            job.is_active = False  # Set the job to inactive instead of deleting
+            job.save()
             return Response({"message": "Job deleted successfully."}, status=status.HTTP_200_OK)
         except Job.DoesNotExist:
             return Response(
@@ -115,6 +116,13 @@ class JobSeekerJobDetailView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     lookup_field = 'id'  # Use 'id' field to look up the job
 
+class CheckJobApplicationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, job_id):
+        user = request.user
+        applied = JobApplication.objects.filter(job_id=job_id, applicant=user).exists()
+        return Response({'is_applied': applied})
 
 class JobApplicationCreateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -178,6 +186,18 @@ class UpdateApplicationStatusView(APIView):
             return Response({'detail': 'Application not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 # job/views.py
+class UserAppliedJobsView(generics.ListAPIView):
+    """
+    View to list all job applications for the authenticated user.
+    """
+    serializer_class = JobApplicationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Filter job applications by the currently authenticated user
+        return JobApplication.objects.filter(applicant=self.request.user)
+
+        
 
 from rest_framework.permissions import IsAdminUser
 

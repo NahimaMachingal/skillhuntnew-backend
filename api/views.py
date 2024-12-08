@@ -339,7 +339,6 @@ class EmployerProfileView(APIView):
             return Response({"detail": "An unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
 @api_view(['POST'])
 def google_login(request):
     token = request.data.get('token')

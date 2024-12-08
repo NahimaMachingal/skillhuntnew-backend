@@ -52,7 +52,8 @@ class Job(models.Model):
     experience_level = models.CharField(max_length=50, choices=EXPERIENCE_LEVEL_CHOICES, blank=True, null=True)
     job_function = models.CharField(max_length=100, blank=True, null=True)
     is_approved = models.BooleanField(default=False)  # New field added
-    
+    currency = models.CharField(max_length=10, default='AED')
+    is_active = models.BooleanField(default=True) 
 
     def __str__(self):
         return self.title

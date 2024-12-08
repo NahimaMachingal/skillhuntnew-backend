@@ -17,7 +17,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('profile/', JobseekerProfileView.as_view(), name='jobseeker-profile'),
     path('eprofile/', EmployerProfileView.as_view(), name='employer-profile'),
-
+    
     
     path('google-login/', views.google_login, name='google-login'),  # New Google login endpoint
 

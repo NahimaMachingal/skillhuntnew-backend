@@ -20,8 +20,18 @@ class JobApplicationSerializer(serializers.ModelSerializer):
     applicant_email = serializers.EmailField(source='applicant.email', read_only=True)
     applicant_name = serializers.CharField(source='applicant.username', read_only=True)
     job_id = serializers.IntegerField(source='job.id', read_only=True)
-    
+    job_status = serializers.SerializerMethodField()
+    is_active = serializers.SerializerMethodField()
+
     class Meta:
         model = JobApplication
         fields = '__all__'
         read_only_fields = ['applied_at']
+    
+    def get_job_status(self, obj):
+        if not obj.job.is_active:
+            return "Job is deleted by employer"
+        return obj.job.status
+    
+    def get_is_active(self, obj):
+        return obj.job.is_active
