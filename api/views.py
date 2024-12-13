@@ -134,37 +134,30 @@ class ResendOTPView(APIView):
 
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
-
     def post(self, request):
         email = request.data['email']
         password = request.data['password']
-
         user = User.objects.filter(email=email).first()
         # Check if user exists
         if user is None:
             return Response(
                 {'error': 'Incorrect username or password'},
                 status=status.HTTP_401_UNAUTHORIZED
-            )
-        
+            )        
         # Check if the password is correct
         if not user.check_password(password):
             return Response(
                 {'error': 'Incorrect username or password'},
-                status=status.HTTP_401_UNAUTHORIZED
-            )
+                status=status.HTTP_401_UNAUTHORIZED            )
         
         # Check if the user is verified
         if not user.is_verified:
             return Response({'error': 'User not verified. Please contact admin.'}, status=status.HTTP_403_FORBIDDEN)
-
         # Create profile if not exists
         if user.user_type == 'employee' and not EmployerProfile.objects.filter(user=user).exists():
             EmployerProfile.objects.create(user=user)
         elif user.user_type == 'jobseeker' and not JobseekerProfile.objects.filter(user=user).exists():
-            JobseekerProfile.objects.create(user=user)
-
-        
+            JobseekerProfile.objects.create(user=user)        
         refresh = RefreshToken.for_user(user)
         refresh['first_name'] = user.first_name
         content = {
