@@ -1,7 +1,7 @@
 #chat/serializers.py
 
 from rest_framework import serializers
-from .models import ChatRoom, Message
+from .models import ChatRoom, Message, Notification
 from django.contrib.auth import get_user_model
 from api.models import JobseekerProfile, EmployerProfile
 
@@ -50,4 +50,8 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         return None
     
     
-   
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['id', 'user', 'message', 'notification_type', 'is_read', 'created_at']

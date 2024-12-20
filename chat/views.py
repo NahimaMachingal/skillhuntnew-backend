@@ -1,8 +1,8 @@
 # chat/views.py
 
 from django.shortcuts import render
-from .models import ChatRoom, Message
-from .serializers import ChatRoomSerializer, MessageSerializer
+from .models import ChatRoom, Message, Notification
+from .serializers import ChatRoomSerializer, MessageSerializer, NotificationSerializer
 from rest_framework import viewsets, permissions, serializers,status
 from rest_framework.response import Response
 from api.models import User
@@ -40,6 +40,28 @@ class ChatRoomViewSet(viewsets.ModelViewSet):
         # Use serializer to validate and update the instance
         serializer.instance = chat_room
         return super().perform_create(serializer)
+
+    @action(detail=True, methods=['put'], url_path='update_last_message')
+    def update_last_message(self, request, *args, **kwargs):
+        chat_room = self.get_object()  # Get the chat room object by ID
+        message_id = request.data.get('message_id')
+
+        try:
+            message = Message.objects.get(id=message_id)
+        except Message.DoesNotExist:
+            return Response(
+                {"detail": "Message not found."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Update the last message in the chat room
+        chat_room.last_message = message
+        chat_room.save()
+
+        return Response(
+            {"detail": "Last message updated successfully."},
+            status=status.HTTP_200_OK
+        )
 
     def create(self, request, *args, **kwargs):
         jobseeker_id = request.data.get('jobseeker_id')
@@ -110,3 +132,23 @@ class MessageViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         chat_room = ChatRoom.objects.get(id=self.kwargs['chat_room_pk'])
         serializer.save(sender=self.request.user, chat_room=chat_room)
+
+
+class NotificationViewSet(viewsets.ModelViewSet):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return Notification.objects.filter(user=user)
+
+    @action(detail=True, methods=['post'])
+    def mark_as_read(self, request, pk=None):
+        try:
+            notification = self.get_object()
+            notification.is_read = True
+            notification.save()
+            serializer = self.get_serializer(notification)
+            return Response(serializer.data)
+        except Notification.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
