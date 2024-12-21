@@ -27,6 +27,7 @@ class Notification(models.Model):
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='notifications', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='received_notifications', on_delete=models.CASCADE, null=True, blank=True)
     message = models.CharField(max_length=255)
     notification_type = models.CharField(max_length=50, choices=NOTIFICATION_TYPES)
     is_read = models.BooleanField(default=False)

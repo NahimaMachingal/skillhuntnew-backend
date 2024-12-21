@@ -28,7 +28,7 @@ class Interview(models.Model):
         (IN_PERSON, 'In-person'),
         (VIRTUAL, 'Virtual'),
     ]
-
+    applicant = models.ForeignKey(User, on_delete=models.CASCADE, related_name='interviews', null=True, blank=True)  # New field
     applicant_name = models.CharField(max_length=255, blank=True, null=True)  # Store name or email
     applicant_email = models.EmailField(blank=True, null=True)  # Optional, for identification
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='interviews')
