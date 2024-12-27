@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'job',
     'chat',
     'interview',
+    'resume',
 
 
 
@@ -85,6 +86,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
 ]
+
+
+MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
+
 AUTH_USER_MODEL = "api.User"
 
 

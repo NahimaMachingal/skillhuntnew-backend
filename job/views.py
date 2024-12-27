@@ -197,6 +197,13 @@ class UserAppliedJobsView(generics.ListAPIView):
         # Filter job applications by the currently authenticated user
         return JobApplication.objects.filter(applicant=self.request.user)
 
+class RejectedJobsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        rejected_jobs = JobApplication.objects.filter(applicant=request.user, status="Rejected")
+        serializer = JobApplicationSerializer(rejected_jobs, many=True)
+        return Response(serializer.data)
         
 
 from rest_framework.permissions import IsAdminUser
@@ -234,3 +241,26 @@ class ApplicantsForJobView(APIView):
                 {"error": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+class UpdateReasonView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, application_id):
+        try:
+            application = JobApplication.objects.get(id=application_id)
+            # Check if the authenticated user is the employer for the related job
+            if application.job.employer.user != request.user:
+                return Response({'detail': 'Not authorized to update this application.'}, status=status.HTTP_403_FORBIDDEN)
+
+            # Update the reason
+            reason = request.data.get('reason', '').strip()
+            if reason:
+                application.reason = reason
+                application.save()
+                serializer = JobApplicationSerializer(application)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({'detail': 'Reason is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        except JobApplication.DoesNotExist:
+            return Response({'detail': 'Application not found.'}, status=status.HTTP_404_NOT_FOUND)

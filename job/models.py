@@ -75,6 +75,7 @@ class JobApplication(models.Model):
     applied_at = models.DateTimeField(auto_now_add=True, null = True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')  # Example status field
     questions = models.JSONField(blank=True, null=True)  # Updated JSONField import
+    reason = models.TextField(blank=True, null=True)
 
 
     def __str__(self):

@@ -1,7 +1,8 @@
 # interview/signals.py
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Interview
+from .models import Interview, Feedback
+from django.contrib.auth.models import User
 from chat.models import Notification
 from django.contrib.auth import get_user_model
 
@@ -35,3 +36,22 @@ def create_interview_notification(sender, instance, created, **kwargs):
             notification_type='APPLICATION_STATUS',
             is_read=False
         )
+
+
+@receiver(post_save, sender=Feedback)
+def create_feedback_notification(sender, instance, created, **kwargs):
+    if created:
+        interview = instance.interview
+        applicant_email = interview.applicant_email
+        if applicant_email:
+            try:
+                applicant = User.objects.get(email=applicant_email)
+                Notification.objects.create(
+                    user=applicant,  # The jobseeker
+                    message=f"Feedback received for your interview for {interview.job.title}.",
+                    notification_type='APPLICATION_STATUS',
+                    is_read=False
+                )
+            except User.DoesNotExist:
+                # Handle cases where the user does not exist
+                pass
