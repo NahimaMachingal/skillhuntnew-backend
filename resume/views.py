@@ -11,9 +11,10 @@ from .serializers import AboutMeSerializer, AddressSerializer, SkillSerializer, 
 from .models import AboutMe, Address, Skill, Project, Education, Experience
 from rest_framework.response import Response
 from rest_framework import status
+from .permissions import IsEmployee, IsJobseeker, IsEmployeeOrJobseeker
 
 class AboutMeView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsJobseeker]
 
     def get(self, request):
         about_me = AboutMe.objects.filter(user=request.user).order_by('-id').first()
@@ -48,7 +49,7 @@ class AboutMeView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AddressView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsJobseeker]
 
     def get(self, request):
         address = Address.objects.filter(user=request.user).order_by('-id').first()
@@ -84,7 +85,7 @@ class AddressView(APIView):
 
     
 class SkillView(CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsJobseeker]
 
     def get(self, request):
         skill = Skill.objects.filter(user=request.user).order_by('-id').first()
@@ -119,7 +120,7 @@ class SkillView(CreateAPIView):
 
 
 class ProjectsView(CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsJobseeker]
     def get(self, request):
         projects = Project.objects.filter(user=request.user).order_by('-id').first()
         if not projects:
@@ -155,7 +156,7 @@ class ProjectsView(CreateAPIView):
 
 
 class EducationView(CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsJobseeker]
     def get(self, request):
         education = Education.objects.filter(user=request.user).order_by('-id').first()
         if not education:
@@ -189,7 +190,7 @@ class EducationView(CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ExperienceView(CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsJobseeker]
     def get(self, request):
         experience = Experience.objects.filter(user=request.user).order_by('-id').first()
         if not experience:
@@ -224,7 +225,7 @@ class ExperienceView(CreateAPIView):
 
 
 class ResumeDataView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsJobseeker]
 
     def get(self, request):
         user = request.user

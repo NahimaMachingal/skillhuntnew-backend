@@ -6,13 +6,14 @@ from rest_framework.response import Response
 from .models import Interview, Feedback
 from job.models import Job
 from rest_framework import status
+from .permissions import IsEmployee, IsJobseeker, IsEmployeeOrJobseeker
 
 class ScheduleInterviewView(CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
     serializer_class = InterviewSerializer
 
 class InterviewDetailView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get(self, request, pk):
         interview = Interview.objects.get(pk=pk)
@@ -29,7 +30,7 @@ class InterviewDetailView(RetrieveAPIView):
 
         
 class UserInterviewListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get(self, request):
         # Filter interviews by the authenticated user's email
@@ -38,7 +39,7 @@ class UserInterviewListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class EmployerJobInterviewsView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get(self, request, job_id):
         # Fetch interviews for the given job_id
@@ -48,7 +49,7 @@ class EmployerJobInterviewsView(APIView):
 
 
 class EmployerInterviewListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get(self, request):
         # Get the employer's jobs by filtering Job objects related to the authenticated employer
@@ -61,7 +62,7 @@ class EmployerInterviewListView(APIView):
 
 
 class InterviewedCandidatesView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get(self, request):
         interviewed_candidates = Interview.objects.filter(status="Completed")
@@ -73,7 +74,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class SubmitFeedbackView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def post(self, request):
         logger.info(f"Received feedback data: {request.data}")
@@ -100,7 +101,7 @@ class SubmitFeedbackView(APIView):
 
 
 class FeedbackReviewView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get(self, request, interview_id):
         try:
@@ -115,7 +116,7 @@ class FeedbackReviewView(APIView):
 
     
 class JobseekerFeedbackView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get(self, request):
         # Fetch the logged-in user's email

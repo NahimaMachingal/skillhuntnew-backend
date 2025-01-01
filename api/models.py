@@ -18,7 +18,7 @@ class User(AbstractUser):
     is_active=models.BooleanField(default=True)
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES)  # New Field
     is_verified = models.BooleanField(default=False)  # New Field
-    
+    is_subscribed = models.BooleanField(default=False)  # New Field
 
     USERNAME_FIELD='email'
     REQUIRED_FIELDS=['username']

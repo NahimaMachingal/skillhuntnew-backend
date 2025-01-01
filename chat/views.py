@@ -7,12 +7,13 @@ from rest_framework import viewsets, permissions, serializers,status
 from rest_framework.response import Response
 from api.models import User
 from rest_framework.decorators import action
+from .permissions import IsEmployee, IsJobseeker, IsEmployeeOrJobseeker
 
 
 
 class ChatRoomViewSet(viewsets.ModelViewSet):
     serializer_class = ChatRoomSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get_queryset(self):
         user = self.request.user
@@ -124,7 +125,7 @@ class ChatRoomViewSet(viewsets.ModelViewSet):
 
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get_queryset(self):
         return Message.objects.filter(chat_room_id=self.kwargs['chat_room_pk'])
@@ -136,7 +137,7 @@ class MessageViewSet(viewsets.ModelViewSet):
 
 class NotificationViewSet(viewsets.ModelViewSet):
     queryset = Notification.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
     serializer_class = NotificationSerializer
 
     def get_queryset(self):

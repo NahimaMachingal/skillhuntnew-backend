@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
     # Meta class defines metadata for the serializer, including the model and fields to be serialized.
     class Meta:
         model = User  # Specifies the model to be serialized
-        fields = ('id', 'email', 'username', 'first_name', 'last_name', 'is_active', 'user_type','password', 'is_verified')  # Serializes all fields of the User model
+        fields = ('id', 'email', 'username', 'first_name', 'last_name', 'is_active', 'user_type','password', 'is_verified', 'is_subscribed')  # Serializes all fields of the User model
         extra_kwargs = {'password': {'write_only': True}}
 
     # Overriding the create method to handle custom creation logic, especially password hashing.

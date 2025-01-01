@@ -18,6 +18,7 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .serializers import UserSerializer, JobseekerProfileSerializer, EmployerProfileSerializer
 from .models import User, JobseekerProfile, EmployerProfile
+from .permissions import IsEmployee, IsJobseeker, IsEmployeeOrJobseeker
 import requests
 from .models import RegisterOTPVerification
 
@@ -212,14 +213,14 @@ def toggle_user_status(request, user_id):
         return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsEmployeeOrJobseeker])
 def logout_view(request):
     logout(request)
     return Response({'message': 'Logged out successfully'}, status=200)
 
 
 class JobseekerProfileView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
     parser_classes = [MultiPartParser, FormParser]  # Enable parsing of form data and file uploads
     def get(self, request):
         try:
@@ -278,7 +279,7 @@ class JobseekerProfileView(APIView):
 
 
 class EmployerProfileView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
     parser_classes = [MultiPartParser, FormParser]  # Enable parsing of form data and file uploads
     def get(self, request):
         try:

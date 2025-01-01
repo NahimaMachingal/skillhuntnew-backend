@@ -15,3 +15,13 @@ class Subscription(models.Model):
 
     def __str__(self):
         return f"Subscription for {self.user.email} - {self.status}"
+
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Update the is_subscribed field of the user
+        if self.status.upper() == "COMPLETED":
+            self.user.is_subscribed = True
+        else:
+            self.user.is_subscribed = False
+        self.user.save()

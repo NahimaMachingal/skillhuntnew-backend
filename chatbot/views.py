@@ -10,11 +10,12 @@ from rest_framework import status
 import logging
 import requests
 from decouple import config
+from .permissions import IsEmployee, IsJobseeker, IsEmployeeOrJobseeker
 
 logger = logging.getLogger(__name__)
 
 class ChatBotView(APIView):
-    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+    permission_classes = [IsEmployeeOrJobseeker]  # Ensure the user is authenticated
     predefined_answers = {
         
         "where are you from": "I exist in the digital world, so I don't have a physical location.",

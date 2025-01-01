@@ -6,12 +6,13 @@ from rest_framework import status
 from django.conf import settings
 from .models import Subscription
 from .serializers import SubscriptionSerializer
+from .permissions import IsEmployee, IsJobseeker, IsEmployeeOrJobseeker
 
 # Initialize Razorpay client
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 class CreateSubscriptionView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsJobseeker]
 
     def post(self, request):
         user = request.user
@@ -41,7 +42,7 @@ class CreateSubscriptionView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyPaymentView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsJobseeker]
 
     def post(self, request):
         data = request.data

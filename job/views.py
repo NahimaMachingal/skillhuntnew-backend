@@ -8,9 +8,10 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework import generics
 from api.models import EmployerProfile
 from rest_framework.permissions import IsAuthenticated
+from .permissions import IsEmployee, IsJobseeker, IsEmployeeOrJobseeker
 
 class PostJobView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployee]
 
     def post(self, request):
         employer = EmployerProfile.objects.filter(user=request.user).first()
@@ -26,7 +27,7 @@ class PostJobView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateJobView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployee]
 
     def put(self, request, job_id):
         try:
@@ -58,7 +59,7 @@ class UpdateJobView(APIView):
 
 class JobListView(generics.ListAPIView):
     serializer_class = JobSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get_queryset(self):
         # Get the currently logged-in user
@@ -74,7 +75,7 @@ class JobListView(generics.ListAPIView):
 # job/views.py
 class PendingJobListView(generics.ListAPIView):
     serializer_class = JobSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get_queryset(self):
         # Return only jobs that are not approved
@@ -84,7 +85,7 @@ class PendingJobListView(generics.ListAPIView):
 class JobDetailView(generics.RetrieveAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
     lookup_field = 'id'  # Use 'id' field to look up the job
 
 
@@ -103,7 +104,7 @@ class ApproveJobView(APIView):
 # job/views.py
 class ApprovedJobListView(generics.ListAPIView):
     serializer_class = JobSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get_queryset(self):
         # Return only jobs that are approved
@@ -113,11 +114,11 @@ class ApprovedJobListView(generics.ListAPIView):
 class JobSeekerJobDetailView(generics.RetrieveAPIView):
     queryset = Job.objects.filter(is_approved=True, status='open')  # Only show approved and open jobs
     serializer_class = JobSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
     lookup_field = 'id'  # Use 'id' field to look up the job
 
 class CheckJobApplicationView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get(self, request, job_id):
         user = request.user
@@ -125,7 +126,7 @@ class CheckJobApplicationView(APIView):
         return Response({'is_applied': applied})
 
 class JobApplicationCreateView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def post(self, request):
         # Automatically set the applicant from the authenticated user
@@ -149,7 +150,7 @@ class AdminJobListView(generics.ListAPIView):
 
 class AppliedCandidatesView(generics.ListAPIView):
     serializer_class = JobApplicationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get_queryset(self):
         # Get the currently logged-in employer user
@@ -163,7 +164,7 @@ class AppliedCandidatesView(generics.ListAPIView):
 
 
 class UpdateApplicationStatusView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def patch(self, request, application_id):
         try:
@@ -191,14 +192,14 @@ class UserAppliedJobsView(generics.ListAPIView):
     View to list all job applications for the authenticated user.
     """
     serializer_class = JobApplicationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get_queryset(self):
         # Filter job applications by the currently authenticated user
         return JobApplication.objects.filter(applicant=self.request.user)
 
 class RejectedJobsView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get(self, request):
         rejected_jobs = JobApplication.objects.filter(applicant=request.user, status="Rejected")
@@ -220,7 +221,7 @@ class AdminJobApplicationsView(generics.ListAPIView):
         return JobApplication.objects.all()
 
 class ApplicantsForJobView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def get(self, request, job_id):
         """
@@ -243,7 +244,7 @@ class ApplicantsForJobView(APIView):
             )
 
 class UpdateReasonView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeOrJobseeker]
 
     def patch(self, request, application_id):
         try:
