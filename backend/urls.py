@@ -27,6 +27,8 @@ urlpatterns = [
     path('api/chat/',include("chat.urls")),
     path('api/interview/',include("interview.urls")),
     path('api/resume/',include("resume.urls")),
+    path('api/chatbot/',include("chatbot.urls")),
+    path('api/subscription/',include("subscription.urls")),
     
     
 

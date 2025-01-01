@@ -60,8 +60,8 @@ INSTALLED_APPS = [
     'chat',
     'interview',
     'resume',
-
-
+    'chatbot',
+    'subscription',
 
     'rest_framework',
     
@@ -149,6 +149,12 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+import os
+
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
+
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -255,4 +261,11 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER         # Default email sender address
 
 # Optional: Customizable email subject and message prefixes (for your own reference)
 EMAIL_SUBJECT_PREFIX = '[Job Portal]'
+
+
+#stripe
+
+STRIPE_SECRET_KEY = "sk_test_51QaxiJCNfWpGsMpaLeLgAXmI5AHUfsqm67WoQaDPC9Glhe9QPicqOoyf0vjxM26HUGnRwflFPY7p7hmi1VQstXeQ00PbpkyqJx"
+STRIPE_PUBLISHABLE_KEY = "pk_test_51QaxiJCNfWpGsMpaJ5em32cXNO2DOjdWwrtFkwyK3LMSPB1xZnWNXVEi4GbIQPnTSPK2XOPk8JQctoonxuziteDa00WMOsBTgj"
+
 
