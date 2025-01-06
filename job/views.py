@@ -75,7 +75,7 @@ class JobListView(generics.ListAPIView):
 # job/views.py
 class PendingJobListView(generics.ListAPIView):
     serializer_class = JobSerializer
-    permission_classes = [IsEmployeeOrJobseeker]
+    permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         # Return only jobs that are not approved
@@ -85,7 +85,7 @@ class PendingJobListView(generics.ListAPIView):
 class JobDetailView(generics.RetrieveAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
-    permission_classes = [IsEmployeeOrJobseeker]
+    permission_classes = [IsAuthenticated]
     lookup_field = 'id'  # Use 'id' field to look up the job
 
 

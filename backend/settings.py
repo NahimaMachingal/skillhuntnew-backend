@@ -32,11 +32,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-# Configure in-memory channel layer
+import os
+
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-        
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [(os.getenv("REDIS_HOST", "127.0.0.1"), int(os.getenv("REDIS_PORT", 6379)))],
+        },
     },
 }
 # Application definition
@@ -182,11 +185,16 @@ ASGI_APPLICATION = 'backend.asgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+  'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'skillhuntdb',
+        'USER' : 'postgres',
+        'PASSWORD' : '123456',
+        'HOST' : 'db',  # Change this from 'localhost' to 'db'
+        'PORT' : '5432',
     }
 }
+
 
 CORS_ALLOW_ALL_ORIGINS = True 
 
@@ -235,8 +243,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
-
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
