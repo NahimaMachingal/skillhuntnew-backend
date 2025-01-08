@@ -195,13 +195,25 @@ DATABASES = {
     }
 }
 
+CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOWED_ORIGINS = [
     
-    'http://localhost:5173',
+    'https://api.skillhuntbackbynahima.online',  # API subdomain
+    'https://skillhuntbackbynahima.online',  # Main frontend domain (if your frontend also calls the backend directly)
     
+]
+CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is only sent over HTTPS
+SESSION_COOKIE_SECURE = True  # Also recommended to set this for security
+CSRF_COOKIE_SAMESITE = 'Strict'
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://api.skillhuntbackbynahima.online',
+    'https://skillhuntbackbynahima.online',  # Add your main frontend domain if needed
 ]
 
 
