@@ -30,7 +30,12 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "api.skillhuntbackbynahima.online",  # Backend domain
+    "skillhuntbackbynahima.online",      # Frontend domain
+    "localhost",  # Local development
+    "127.0.0.1",  # Local development
+]
 
 import os
 
