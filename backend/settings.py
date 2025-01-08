@@ -203,10 +203,12 @@ CORS_ALLOWED_ORIGINS = [
     
     'https://api.skillhuntbackbynahima.online',  # API subdomain
     'https://skillhuntbackbynahima.online',  # Main frontend domain (if your frontend also calls the backend directly)
+    'http://api.skillhuntbackbynahima.online',
+    'http://skillhuntbackbynahima.online',
     
 ]
-CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is only sent over HTTPS
-SESSION_COOKIE_SECURE = True  # Also recommended to set this for security
+CSRF_COOKIE_SECURE = False  # Ensures CSRF cookie is only sent over HTTPS
+SESSION_COOKIE_SECURE = False  # Also recommended to set this for security
 CSRF_COOKIE_SAMESITE = 'Strict'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -214,6 +216,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_TRUSTED_ORIGINS = [
     'https://api.skillhuntbackbynahima.online',
     'https://skillhuntbackbynahima.online',  # Add your main frontend domain if needed
+    'http://api.skillhuntbackbynahima.online',
+    'http://skillhuntbackbynahima.online',
 ]
 
 
