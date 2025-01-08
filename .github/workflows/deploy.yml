@@ -63,8 +63,22 @@ jobs:
             set -e
             echo "Starting deployment on AWS EC2..."
 
+            # Check for processes using port 6379
+            echo "Checking for processes using Redis port..."
+            sudo lsof -i :6379 || true
+      
+            # Stop any existing Redis service
+            sudo service redis-server stop || true
+      
+            # Kill any process using port 6379
+            sudo fuser -k 6379/tcp || true
+
             # Docker login
             echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+            # Stop and remove existing containers
+            sudo docker ps -aq | xargs -r sudo docker stop
+            sudo docker ps -aq | xargs -r sudo docker rm
 
             # Stop and remove existing containers if they exist
             sudo docker rm -f secondproject-backend || true
@@ -90,6 +104,10 @@ jobs:
               -p 8000:8000 \
               --env-file /home/$VM_USER/.env \
               ${{ secrets.DOCKER_USERNAME }}/secondproject-backend:latest
+
+            # Verify containers are running
+            echo "Verifying containers..."
+            sudo docker ps
 
             echo "Deployment complete!"
           EOF
