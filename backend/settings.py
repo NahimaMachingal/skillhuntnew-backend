@@ -215,9 +215,10 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is only sent over HTTPS
 SESSION_COOKIE_SECURE = True  # Also recommended to set this for security
-CSRF_COOKIE_SAMESITE = 'Strict'
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-CSRF_USE_SESSIONS = True
+CSRF_USE_SESSIONS = False
 SECURE_HSTS_SECONDS = 31536000  # 1 year
 
 
@@ -228,7 +229,9 @@ CSRF_TRUSTED_ORIGINS = [
 
 ]
 
-pythonCopyCSRF_COOKIE_DOMAIN = '.skillhuntbackbynahima.online'
+CSRF_COOKIE_DOMAIN = 'api.skillhuntbackbynahima.online'
+SESSION_COOKIE_DOMAIN = 'api.skillhuntbackbynahima.online'
+
 
 
 # Password validation
