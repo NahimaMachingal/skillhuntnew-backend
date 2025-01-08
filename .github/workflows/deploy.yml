@@ -67,25 +67,25 @@ jobs:
             echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
             # Stop and remove existing containers if they exist
-            docker rm -f secondproject-backend || true
-            docker rm -f redis || true
+            sudo docker rm -f secondproject-backend || true
+            sudo docker rm -f redis || true
 
             # Cleanup unused Docker resources
-            docker system prune -a -f
+            sudo docker system prune -a -f
 
             # Create Docker network if it doesn't exist
-            docker network create secondproject-network || true
+            sudo docker network create secondproject-network || true
 
             # Pull the latest Docker image
-            docker pull ${{ secrets.DOCKER_USERNAME }}/secondproject-backend:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/secondproject-backend:latest
 
             # Start Redis container
             echo "Starting Redis container..."
-            docker run -d --name redis --network secondproject-network -p 6379:6379 redis:latest
+            sudo docker run -d --name redis --network secondproject-network -p 6379:6379 redis:latest
 
             # Start Django backend container
             echo "Starting Django backend container..."
-            docker run -d --name secondproject-backend \
+            sudo docker run -d --name secondproject-backend \
               --network secondproject-network \
               -p 8000:8000 \
               --env-file /home/$VM_USER/.env \
