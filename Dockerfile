@@ -16,7 +16,7 @@ COPY . /app/
 WORKDIR /app
 
 # In your Dockerfile
-RUN mkdir -p /app/static /app/media
+RUN mkdir -p /app/media
 
 # Expose the port the app runs on
 EXPOSE 8000
