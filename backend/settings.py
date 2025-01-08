@@ -213,8 +213,8 @@ CORS_ALLOWED_ORIGINS = [
     
     
 ]
-CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is only sent over HTTPS
-SESSION_COOKIE_SECURE = True  # Also recommended to set this for security
+CSRF_COOKIE_SECURE = False  # Ensures CSRF cookie is only sent over HTTPS
+SESSION_COOKIE_SECURE = False  # Also recommended to set this for security
 CSRF_COOKIE_SAMESITE = 'Strict'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_USE_SESSIONS = True
