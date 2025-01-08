@@ -207,7 +207,7 @@ DATABASES = {
         'NAME': 'skillhuntdb',
         'USER' : 'postgres',
         'PASSWORD' : '123456',
-        'HOST' : 'localhost',  # Change this from 'localhost' to 'db'
+        'HOST' : 'db',  # Change this from 'localhost' to 'db'
         'PORT' : '5432',
     }
 }
