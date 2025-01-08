@@ -47,13 +47,12 @@ jobs:
       # Deploy to AWS EC2 using SSH
       - name: Deploy to AWS EC2
         env:
-          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           VM_IP: ${{ secrets.VM_IP }}
           VM_USER: ${{ secrets.VM_USER }}
         run: |
           # Create SSH key file
-          echo "$AWS_SECRET_KEY" > aws-ec2-key.pem
+          echo "$SSH_PRIVATE_KEY" > aws-ec2-key.pem
           chmod 600 aws-ec2-key.pem
 
           # Transfer .env file to EC2 instance
