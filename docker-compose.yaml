@@ -1,0 +1,51 @@
+#secondproject/docker-compose.yml
+
+services:
+  backend:
+    image: nahima1234/backend:latest
+    command: >
+      sh -c "python manage.py migrate &&
+             daphne -b 0.0.0.0 -p 8000 backend.asgi:application"
+    volumes:
+      - .:/app
+      - media_volume:/app/media
+  
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATABASE_NAME=skillhuntdb
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=123456
+      - DATABASE_HOST=db
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+      - redis
+    
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: skillhuntdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  
+  redis:
+    image: redis:latest
+    command: redis-server --save 60 1 --loglevel warning --maxmemory-policy noeviction --maxmemory 256mb
+    
+    ports:
+      - "6379:6379"
+
+  
+volumes:
+  postgres_data:
+  media_volume:
