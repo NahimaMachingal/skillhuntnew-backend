@@ -21,6 +21,6 @@ RUN mkdir -p /app/media
 # Expose the port the app runs on
 EXPOSE 8000
 
-# Start the application
-CMD ["python", "manage.py", "runserver"]
+# Start the application with Daphne
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "backend.asgi:application"]
 
